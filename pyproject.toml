@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "raspberry-pi-fpga-node"
+version = "0.1.0"
+description = ""
+authors = ["Maksprots <makslive@bk.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.8"
+openocd = "^0.3.0"
+faststream = "^0.5.34"
+sqlalchemy = "^2.0.38"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
