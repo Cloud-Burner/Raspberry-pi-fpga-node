@@ -201,24 +201,6 @@ files = [
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
-name = "openocd"
-version = "0.3.0"
-description = "Python interface library for OpenOCD"
-optional = false
-python-versions = ">=3.10"
-files = []
-develop = false
-
-[package.dependencies]
-typing_extensions = ">=4.0.0"
-
-[package.source]
-type = "git"
-url = "https://gitlab.zapb.de/openocd/python-openocd.git"
-reference = "HEAD"
-resolved_reference = "c1edefd9f2810603400d4a9e1fcfbc6def41710d"
-
-[[package]]
 name = "pydantic"
 version = "2.10.6"
 description = "Data validation using Python type hints"
@@ -486,5 +468,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.12"
-content-hash = "5dcbd905475fd29197399f06cdebf7828fb80224886d1d8587b93961493f002b"
+python-versions = "^3.11"
+content-hash = "337a00f45da226b4e81879d89b86d89b5ca94072d1c5074f44f88387961a06d1"

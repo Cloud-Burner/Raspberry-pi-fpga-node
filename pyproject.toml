@@ -7,9 +7,8 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 fastapi = "^0.115.8"
-openocd = {git = "https://gitlab.zapb.de/openocd/python-openocd.git"}
 faststream = "^0.5.34"
 sqlalchemy = "^2.0.38"
 
