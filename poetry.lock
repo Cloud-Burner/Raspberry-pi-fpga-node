@@ -201,20 +201,6 @@ files = [
 all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
-name = "openocd"
-version = "0.3.0"
-description = "Python interface library for OpenOCD"
-optional = false
-python-versions = ">=3.10"
-files = [
-    {file = "openocd-0.3.0-py3-none-any.whl", hash = "sha256:4d56b7cc577ac0777edbf393d455cd358f50dfe22780b46cdc70bf3accc76503"},
-    {file = "openocd-0.3.0.tar.gz", hash = "sha256:dc9f88ea54728b86b7cc2e1026d4528c40bcb4bdd7855c9960f65d3169361c36"},
-]
-
-[package.dependencies]
-typing-extensions = ">=4.0.0"
-
-[[package]]
 name = "pydantic"
 version = "2.10.6"
 description = "Data validation using Python type hints"
@@ -482,5 +468,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.12"
-content-hash = "52f0390d8602660aabdcb4e21562491ea351ba555a8534522da475ec6934b380"
+python-versions = "^3.11"
+content-hash = "337a00f45da226b4e81879d89b86d89b5ca94072d1c5074f44f88387961a06d1"
