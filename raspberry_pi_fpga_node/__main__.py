@@ -1,22 +1,33 @@
-#
-# from openocd import OpenOcd
-#
-# with OpenOcd() as oocd:
-#     oocd.halt()
-#     registers = oocd.read_registers(['pc', 'sp'])
-#
-#     print('Program counter: 0x%x' % registers['pc'])
-#     print('Stack pointer: 0x%x' % registers['sp'])
-#
-#     oocd.resume()
+"""This module contains the startup server"""
 
-from openocd import OpenOcd
-with OpenOcd() as oocd:
-    oocd.halt()
-    registers = oocd.read_registers(['pc', 'sp'])
-    oocd.execu te("openocd -f /usr/share/openocd/scripts/interface/altera-usb-blaster.cfg    -f /usr/share/openocd/scripts/target/fpga.cfg -c "init; svf /home/adm/output.svf; shutdown"\”")
+import uvicorn
+from faststream.asgi import AsgiFastStream
+from uvicorn import Server
 
-    print('Program counter: 0x%x' % registers['pc'])
-    print('Stack pointer: 0x%x' % registers['sp'])
+from raspberry_pi_fpga_node.core.broker import broker
+from raspberry_pi_fpga_node.core.settings import settings
+from raspberry_pi_fpga_node.routers.fgpa_topics import router
 
-    oocd.resume()
+
+def init() -> AsgiFastStream:
+    """
+    initialize the app
+    :return: AsgiFastStream
+    """
+    broker.include_router(router)
+    return AsgiFastStream(broker)
+
+
+def main() -> None:
+    """
+    run the app
+    :return:
+    """
+    config = uvicorn.Config(app="__main__:app", log_level=settings.log_level)
+    server = Server(config=config)
+    server.run()
+
+
+if __name__ == "__main__":
+    app = init()
+    main()
