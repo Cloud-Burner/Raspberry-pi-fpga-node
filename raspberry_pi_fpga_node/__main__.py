@@ -1,4 +1,3 @@
-
 """This module contains the startup server"""
 
 import uvicorn
