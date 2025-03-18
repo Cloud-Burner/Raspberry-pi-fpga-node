@@ -8,6 +8,9 @@ class Settings(BaseSettings):
 
     green_board_q: str = "green_1"
     log_level: str = "debug"
+    max_threads: int = 1
+
+    fpga_address: str = "ax9999"
 
     s3_url: str = "http://localhost:9000"
     access_key: str = "f0Sxs0Bf2pqJDQtFNQZF"
