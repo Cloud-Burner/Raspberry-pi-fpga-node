@@ -2,6 +2,7 @@
 
 import uvicorn
 from faststream.asgi import AsgiFastStream
+from loguru import logger
 from uvicorn import Server
 
 from raspberry_pi_fpga_node.core.broker import broker
@@ -15,7 +16,7 @@ def init() -> AsgiFastStream:
     :return: AsgiFastStream
     """
     broker.include_router(router)
-    return AsgiFastStream(broker)
+    return AsgiFastStream(broker, logger=logger)
 
 
 def main() -> None:

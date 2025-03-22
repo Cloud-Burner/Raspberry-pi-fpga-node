@@ -21,7 +21,7 @@ async def upload_bytes(bucket: str, file: bytes, name: str) -> AnyUrl:
         await s3_client.put_object(Bucket=bucket, Key=name, Body=file)
         return await s3_client.generate_presigned_url(
             "get_object",
-            Params={"Bucket": bucket, "Key": file},
+            Params={"Bucket": bucket, "Key": name},
             ExpiresIn=36000,
         )
 
