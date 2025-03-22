@@ -13,7 +13,6 @@ class Flash:
 
     def flash_fpga(self, flash_file: bytes):
         logger.info("Fpga flashed")
-        pass
 
     def flash_arduino_nano(self):
         pass
