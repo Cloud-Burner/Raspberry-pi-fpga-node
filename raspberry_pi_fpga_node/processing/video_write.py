@@ -27,10 +27,8 @@ class VideoWriter:
                 command_processor.next()
                 if not ret:
                     break
-                if not position:
-                    out.write(frame[:, : self.width])
-                else:
-                    out.write(frame[:, self.width :])
+                frame_cut = frame[:, : self.width] if not position else frame[:, self.width :]
+                out.write(frame_cut)
             out.release()
             tmp.seek(0)
             return tmp.read()
