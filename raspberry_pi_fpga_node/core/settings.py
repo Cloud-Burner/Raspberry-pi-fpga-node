@@ -8,7 +8,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 
+    rabbit_host: str = "localhost"
+    rabbit_port: int = 5672
     green_board_q: str = "green_1"
+
     log_level: str = "info"
     max_threads: int = 3
     camera_number: int = 1

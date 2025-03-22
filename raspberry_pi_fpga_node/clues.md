@@ -46,3 +46,6 @@ with OpenOcd() as oocd:
     oocd.resume()
     
 
+    s3_url: str = "http://192.168.1.39:9000"
+
+sudo apt install libopencv-dev python3-opencv
