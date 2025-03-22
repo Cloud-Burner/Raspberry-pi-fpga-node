@@ -1,3 +1,39 @@
+import tempfile
+
+import cv2
+
+from raspberry_pi_fpga_node.core.settings import settings
+from raspberry_pi_fpga_node.processing.command_proccessing_base import (
+    CommandProcessingBase,
+)
+
+
 class VideoWriter:
     def __init__(self):
-        pass
+        self.camera = cv2.VideoCapture(settings.camera_number)
+        self.fourcc = cv2.VideoWriter_fourcc(*settings.fourcc_codec)
+        self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) // 2
+        self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    def get_video(
+        self, command_processor: CommandProcessingBase, position: int
+    ) -> bytes:
+        with tempfile.NamedTemporaryFile(suffix=".mp4") as tmp:
+            out = cv2.VideoWriter(
+                tmp.name, self.fourcc, settings.fps, (self.width, self.height)
+            )
+            while command_processor.execution_state:
+                ret, frame = self.camera.read()
+                command_processor.next()
+                if not ret:
+                    break
+                if not position:
+                    out.write(frame[:, : self.width])
+                else:
+                    out.write(frame[:, self.width :])
+            out.release()
+            tmp.seek(0)
+            return tmp.read()
+
+
+video_writer = VideoWriter()
