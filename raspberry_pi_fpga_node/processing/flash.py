@@ -12,8 +12,8 @@ class Flash:
         # todo checks form settings?
         self.clear_flash = str(Path(settings.dynamic_dir + "/clear_flash.svf"))
         self.bench_flash = str(Path(settings.dynamic_dir + "/output.svf"))
-        self.target_fpga = str(Path(settings.static_dir + "/target_fpga.cfg "))
-        self.blaster_conf = str(Path(settings.static_dir + "/usb_blaster.cfg "))
+        self.target_fpga = str(Path(settings.static_dir + "/target_fpga.cfg"))
+        self.blaster_conf = str(Path(settings.static_dir + "/usb_blaster.cfg"))
         logger.info("Fpga confs inited")
 
     def flash_fpga(self, flash_file_path: str):
