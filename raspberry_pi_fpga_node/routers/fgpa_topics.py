@@ -15,7 +15,7 @@ router = RabbitRouter()
 
 
 @router.subscriber(queue=green_board_queue)
-async def handle(task: FpgaTask):
+async def handle(task: FpgaTask) -> None:
     """
     Handle a message from green plate q
     :param task:

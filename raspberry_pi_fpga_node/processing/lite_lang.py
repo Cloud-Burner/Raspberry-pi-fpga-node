@@ -1,13 +1,15 @@
+"""This module contains Lang executor for fpga."""
+
 from raspberry_pi_fpga_node.processing.command_proccessing_base import (
     CommandProcessingBase,
 )
 
 
 class LiteLangExecutor(CommandProcessingBase):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-    def next(self):
+    def next(self) -> None:
         # todo lang exec
         self.frame_counter -= 1
         if self.frame_counter == 0:

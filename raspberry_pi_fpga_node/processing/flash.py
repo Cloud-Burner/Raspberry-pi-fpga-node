@@ -1,3 +1,5 @@
+"""This module contains the flash processor."""
+
 import subprocess
 from pathlib import Path
 
@@ -7,7 +9,7 @@ from raspberry_pi_fpga_node.core.settings import settings
 
 
 class Flash:
-    def __init__(self):
+    def __init__(self) -> None:
         # create flash congig
         # todo checks form settings?
         self.clear_flash = str(Path(settings.dynamic_dir + "/clear_flash.svf"))
@@ -16,7 +18,9 @@ class Flash:
         self.blaster_conf = str(Path(settings.static_dir + "/usb_blaster.cfg"))
         logger.info("Fpga confs inited")
 
-    def flash_fpga(self, flash_file_path: str):
+    def flash_fpga(self, flash_file_path: str) -> None:
+        """Function calls openocd flash tool to load user flash file
+        :param flash_file_path:"""
         command = [
             "openocd",
             "-f",
@@ -34,5 +38,5 @@ class Flash:
             logger.error(f"Ошибка при выполнении команды {exc}")
             # todo raise something
 
-    def flash_arduino_nano(self):
+    def flash_arduino_nano(self) -> None:
         pass

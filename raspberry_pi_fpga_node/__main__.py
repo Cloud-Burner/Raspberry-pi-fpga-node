@@ -1,4 +1,4 @@
-"""This module contains the startup server"""
+"""This module contains the startup server."""
 
 import uvicorn
 from faststream.asgi import AsgiFastStream

@@ -1,3 +1,5 @@
+"""This module contains the processor that writes video and execute lang."""
+
 import tempfile
 
 import cv2
@@ -9,7 +11,7 @@ from raspberry_pi_fpga_node.processing.command_proccessing_base import (
 
 
 class VideoWriter:
-    def __init__(self):
+    def __init__(self) -> None:
         self.camera = cv2.VideoCapture(settings.camera_number)
         self.fourcc = cv2.VideoWriter_fourcc(*settings.fourcc_codec)
         self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) // 2

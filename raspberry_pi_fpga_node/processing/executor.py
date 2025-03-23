@@ -1,3 +1,5 @@
+"""This module thread pool and thread tasks for handle task."""
+
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -23,7 +25,13 @@ flasher = Flash()
 
 async def fpga_process(
     instruction: bytes, flash_file: bytes, username: str, number: str
-):
+) -> None:
+    """Make all task processes asynchronously in parallel thread.
+    :param instruction:
+    :param flash_file:
+    :param username:
+    :param number: number of the task
+    """
     name = username + "-" + number + "-" + str(time()).replace(".", "-")
     with tempfile.NamedTemporaryFile(
         delete=True, suffix=".svf", dir=Path(settings.dynamic_dir)
@@ -46,4 +54,3 @@ async def fpga_process(
             message=ResultFpgaTask(username=username, number=number, link=link),
             queue=result_exchange,
         )
-        # todo publish link
