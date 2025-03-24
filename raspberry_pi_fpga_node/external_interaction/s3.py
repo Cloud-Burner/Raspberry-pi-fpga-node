@@ -1,3 +1,7 @@
+"""This module contains the s3 functionality."""
+
+from typing import Any
+
 import aiofiles
 from aiobotocore.session import get_session
 from pydantic import AnyUrl
@@ -19,10 +23,12 @@ async def upload_bytes(bucket: str, file: bytes, name: str) -> AnyUrl:
     """Загружает файл из байтов (оперативы)"""
     async with session.create_client(**creds) as s3_client:
         await s3_client.put_object(Bucket=bucket, Key=name, Body=file)
-        return await s3_client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": bucket, "Key": name},
-            ExpiresIn=36000,
+        return AnyUrl(
+            await s3_client.generate_presigned_url(
+                "get_object",
+                Params={"Bucket": bucket, "Key": name},
+                ExpiresIn=36000,
+            )
         )
 
 
@@ -34,15 +40,20 @@ async def upload_from_disk(bucket: str, file_path: str) -> AnyUrl:
             await s3_client.put_object(
                 Bucket=bucket, Key=file_path.split("/")[-1], Body=data
             )
-            return await s3_client.generate_presigned_url(
-                "get_object",
-                Params={"Bucket": bucket, "Key": file_path.split("/")[-1]},
-                ExpiresIn=36000,
+            return AnyUrl(
+                await s3_client.generate_presigned_url(
+                    "get_object",
+                    Params={"Bucket": bucket, "Key": file_path.split("/")[-1]},
+                    ExpiresIn=36000,
+                )
             )
 
 
-async def download(bucket: str, file: str) -> bytes:
-    """Скачивает файл, в оперативу"""
+async def download(bucket: str, file: str) -> bytes | Any:
+    """Скачивает файл, в оперативу
+    :param bucket:
+    :param file:
+    """
     async with session.create_client(**creds) as s3_client:
         response = await s3_client.get_object(Bucket=bucket, Key=file)
         return await response["Body"].read()

@@ -1,5 +1,6 @@
 """This module contains the settings for the all app"""
 
+from pathlib import Path
 from typing import Literal
 
 from pydantic_settings import BaseSettings
@@ -8,7 +9,11 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 
+    rabbit_host: str = "localhost"
+    rabbit_port: int = 5672
     green_board_q: str = "green_1"
+    result_exc: str = "result"
+
     log_level: str = "info"
     max_threads: int = 3
     camera_number: int = 1
@@ -24,6 +29,10 @@ class Settings(BaseSettings):
     secret_key: str = "hrGuLOhzFZBNWtmL5TJ8wiB2e5d9jIHeSzdEYXbW"
     result_bucket: str = "test"
     task_bucket: str = "test"
+
+    project_dir: str = str(Path.cwd())
+    dynamic_dir: str = project_dir + "/raspberry_pi_fpga_node/processing/dynamic_files"
+    static_dir: str = project_dir + "/raspberry_pi_fpga_node/processing/static_confs"
 
 
 settings = Settings()

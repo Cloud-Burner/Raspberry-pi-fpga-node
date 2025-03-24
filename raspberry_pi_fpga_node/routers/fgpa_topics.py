@@ -1,7 +1,6 @@
 """This module contains the routing logic for fpga topics."""
 
 import asyncio
-from time import time
 
 from faststream.rabbit import RabbitQueue, RabbitRouter
 from loguru import logger
@@ -16,13 +15,13 @@ router = RabbitRouter()
 
 
 @router.subscriber(queue=green_board_queue)
-async def handle(task: FpgaTask):
+async def handle(task: FpgaTask) -> None:
     """
     Handle a message from green plate q
     :param task:
     :return:
     """
-    name = task.username + str(time()).replace(".", "-")
+
     instruction = await download(
         bucket=settings.task_bucket, file=task.instruction_file
     )
@@ -30,5 +29,10 @@ async def handle(task: FpgaTask):
     flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
     executor.submit(
         asyncio.run,
-        fpga_process(instruction=instruction, flash_file=flash_file, name=name),
+        fpga_process(
+            instruction=instruction,
+            flash_file=flash_file,
+            username=task.username,
+            number=task.number,
+        ),
     )

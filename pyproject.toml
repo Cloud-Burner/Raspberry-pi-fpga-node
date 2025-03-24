@@ -2,7 +2,7 @@
 name = "raspberry_pi_fpga_node"
 version = "0.1.0"
 description = ""
-authors = ["Maksprots <makslive@bk.ru>,", "Marlen2204"]
+authors = ["Maksprots <makslive@bk.ru>", "Marlen2204 <slobozhaninovaw@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
@@ -28,6 +28,3 @@ mypy = "^1.15.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.mypy]
-ignore_import_untyped=true
