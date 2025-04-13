@@ -1,0 +1,9 @@
+write_frame 15
+pin 5 low
+write_frame 30
+pin 5 high
+write_frame 30
+pin 6 low
+write_frame 30
+pin 6 high
+write_frame 30

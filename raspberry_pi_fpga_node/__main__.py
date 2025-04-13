@@ -6,17 +6,14 @@ from loguru import logger
 from uvicorn import Server
 
 from raspberry_pi_fpga_node.core.broker import broker
+from raspberry_pi_fpga_node.core.logger import setup_logger
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.routers.fgpa_topics import router
 
+broker.include_router(router)
 
-def init() -> AsgiFastStream:
-    """
-    initialize the app
-    :return: AsgiFastStream
-    """
-    broker.include_router(router)
-    return AsgiFastStream(broker, logger=logger)
+setup_logger(settings.log_level)
+app = AsgiFastStream(broker, logger=logger)
 
 
 def main() -> None:
@@ -30,5 +27,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    app = init()
     main()

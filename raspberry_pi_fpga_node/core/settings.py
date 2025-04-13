@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     green_board_q: str = "green_1"
     result_exc: str = "result"
 
-    log_level: str = "info"
+    log_level: str = "debug"
     max_threads: int = 3
     camera_number: int = 1
     fourcc_codec: str = "mp4v"
@@ -23,6 +23,8 @@ class Settings(BaseSettings):
 
     fpga_address: str = "ax9999"
     fpga_camera_position: Literal[0, 1] = 0
+
+    connected_pins: set[int] = {5, 6}
 
     s3_url: str = "http://localhost:9000"
     access_key: str = "f0Sxs0Bf2pqJDQtFNQZF"

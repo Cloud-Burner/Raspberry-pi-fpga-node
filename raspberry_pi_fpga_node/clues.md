@@ -51,7 +51,7 @@ with OpenOcd() as oocd:
 sudo apt install libopencv-dev python3-opencv
 
 ## test msg
-{"username": "maks", "flash_file": "output.svf", "instruction_file": "enums.py", "number": "123"}
+{"username": "maks", "flash_file": "pins_output1.svf", "instruction_file": "exz.txt", "number": "123"}
 # on board config 
 
 
