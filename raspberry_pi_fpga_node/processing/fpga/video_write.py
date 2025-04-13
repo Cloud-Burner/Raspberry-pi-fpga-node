@@ -11,8 +11,11 @@ from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
 
 
 class VideoWriter:
+<<<<<<< HEAD:raspberry_pi_fpga_node/processing/fpga/video_write.py
     """This class writes video and switch tick in executor"""
 
+=======
+>>>>>>> main:raspberry_pi_fpga_node/processing/video_write.py
     def __init__(self) -> None:
         self.camera = cv2.VideoCapture(settings.camera_number)
         self.fourcc = cv2.VideoWriter_fourcc(*settings.fourcc_codec)
