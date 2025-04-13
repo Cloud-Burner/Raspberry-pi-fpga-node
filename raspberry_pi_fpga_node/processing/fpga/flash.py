@@ -9,9 +9,9 @@ from raspberry_pi_fpga_node.core.settings import settings
 
 
 class Flash:
+    """This class contains the flash processor for fpga and arduino."""
+
     def __init__(self) -> None:
-        # create flash congig
-        # todo checks form settings?
         self.clear_flash = str(Path(settings.dynamic_dir + "/clear_flash.svf"))
         self.bench_flash = str(Path(settings.dynamic_dir + "/output.svf"))
         self.target_fpga = str(Path(settings.static_dir + "/target_fpga.cfg"))
@@ -36,7 +36,7 @@ class Flash:
             logger.info(f"Fpga flashed for {flash_file_path.split('/')[-1]}")
         except subprocess.CalledProcessError as exc:
             logger.error(f"Ошибка при выполнении команды {exc}")
-            # todo raise something
+            raise ConnectionRefusedError("No connection to fpga") from exc
 
     def flash_arduino_nano(self) -> None:
         pass
