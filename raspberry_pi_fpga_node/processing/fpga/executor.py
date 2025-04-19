@@ -25,7 +25,7 @@ flasher = Flash()
 lock = threading.Lock()
 
 
-async def fpga_process(user_id: int, number: str, task: FpgaTask) -> None:
+async def fpga_process(task: FpgaTask) -> None:
     """Make all task processes asynchronously in parallel thread.
     :param instruction:
     :param flash_file:
@@ -39,7 +39,7 @@ async def fpga_process(user_id: int, number: str, task: FpgaTask) -> None:
         logger.info(instruction)
         flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
 
-        name = str(user_id)+ "-" + number + "-" + str(time()).replace(".", "-")
+        name = str(task.user_id)+ "-" + task.number + "-" + str(time()).replace(".", "-")
         with tempfile.NamedTemporaryFile(
             delete=True, suffix=".svf", dir=Path(settings.dynamic_dir)
         ) as temp_file:
@@ -57,7 +57,8 @@ async def fpga_process(user_id: int, number: str, task: FpgaTask) -> None:
             )
             logger.info(f"Vido uploaded, download on {link}")
             logger.info(f"Tempfile {temp_file.name} deleted")
-            await broker.publish(
-                message=ResultFpgaTask(user_id=user_id, number=number, link=link),
-                queue=result_queue,
-            )
+        await broker.publish(
+            message=ResultFpgaTask(user_id=task.user_id, number=task.number, link=str(link)),
+            queue=result_queue,
+        )
+        logger.info(f"Result sent to user:{task.user_id}")

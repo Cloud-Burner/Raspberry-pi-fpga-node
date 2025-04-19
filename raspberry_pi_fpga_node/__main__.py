@@ -21,9 +21,10 @@ def main() -> None:
     run the app
     :return:
     """
-    config = uvicorn.Config(app="__main__:app", log_level=settings.log_level)
+    config = uvicorn.Config(app="__main__:app", log_config= None)
     server = Server(config=config)
     server.run()
+
 
 
 if __name__ == "__main__":
