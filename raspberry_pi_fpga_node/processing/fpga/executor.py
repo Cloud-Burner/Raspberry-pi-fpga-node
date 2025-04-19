@@ -17,7 +17,7 @@ from raspberry_pi_fpga_node.processing.fpga.flash import Flash
 from raspberry_pi_fpga_node.processing.fpga.lite_lang import LiteLangExecutor
 from raspberry_pi_fpga_node.processing.fpga.video_write import VideoWriter
 
-result_exchange = RabbitQueue(name=settings.result_exc)
+result_queue = RabbitQueue(name=settings.result_queue)
 
 executor = ThreadPoolExecutor(max_workers=settings.max_threads)
 camera = VideoWriter()
@@ -25,13 +25,8 @@ flasher = Flash()
 lock = threading.Lock()
 
 
-async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
-    """Make all task processes asynchronously in parallel thread.
-    :param instruction:
-    :param flash_file:
-    :param username:
-    :param number: number of the task
-    """
+async def fpga_process(task: FpgaTask) -> None:
+    """Make all task processes asynchronously in parallel thread."""
     with lock:
         instruction = await download(
             bucket=settings.task_bucket, file=task.instruction_file
@@ -39,7 +34,9 @@ async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
         logger.info(instruction)
         flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
 
-        name = username + "-" + number + "-" + str(time()).replace(".", "-")
+        name = (
+            str(task.user_id) + "-" + task.number + "-" + str(time()).replace(".", "-")
+        )
         with tempfile.NamedTemporaryFile(
             delete=True, suffix=".svf", dir=Path(settings.dynamic_dir)
         ) as temp_file:
@@ -57,7 +54,10 @@ async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
             )
             logger.info(f"Vido uploaded, download on {link}")
             logger.info(f"Tempfile {temp_file.name} deleted")
-            await broker.publish(
-                message=ResultFpgaTask(username=username, number=number, link=link),
-                queue=result_exchange,
-            )
+        await broker.publish(
+            message=ResultFpgaTask(
+                user_id=task.user_id, number=task.number, link=str(link)
+            ),
+            queue=result_queue,
+        )
+        logger.info(f"Result sent to user:{task.user_id}")

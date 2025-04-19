@@ -9,14 +9,16 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 
-    rabbit_host: str = "localhost"
+    rabbit_host: str = "192.168.1.39"
     rabbit_port: int = 5672
+    rabbit_user: str = "user"
+    rabbit_password: str = "password"
     green_board_q: str = "green_1"
-    result_exc: str = "result"
+    result_queue: str = "result"
 
-    log_level: str = "debug"
+    log_level: str = "DEBUG"
     max_threads: int = 3
-    camera_number: int = 1
+    camera_number: int = 0
     fourcc_codec: str = "mp4v"
     video_format: str = "mp4"
     fps: int = 20
@@ -26,7 +28,7 @@ class Settings(BaseSettings):
 
     connected_pins: set[int] = {5, 6}
 
-    s3_url: str = "http://localhost:9000"
+    s3_url: str = "http://192.168.1.39:9000"
     access_key: str = "f0Sxs0Bf2pqJDQtFNQZF"
     secret_key: str = "hrGuLOhzFZBNWtmL5TJ8wiB2e5d9jIHeSzdEYXbW"
     result_bucket: str = "test"
