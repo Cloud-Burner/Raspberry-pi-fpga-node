@@ -17,7 +17,7 @@ from raspberry_pi_fpga_node.processing.fpga.flash import Flash
 from raspberry_pi_fpga_node.processing.fpga.lite_lang import LiteLangExecutor
 from raspberry_pi_fpga_node.processing.fpga.video_write import VideoWriter
 
-result_exchange = RabbitQueue(name=settings.result_exc)
+result_queue = RabbitQueue(name=settings.result_queue)
 
 executor = ThreadPoolExecutor(max_workers=settings.max_threads)
 camera = VideoWriter()
@@ -25,11 +25,11 @@ flasher = Flash()
 lock = threading.Lock()
 
 
-async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
+async def fpga_process(user_id: int, number: str, task: FpgaTask) -> None:
     """Make all task processes asynchronously in parallel thread.
     :param instruction:
     :param flash_file:
-    :param username:
+    :param user_id:
     :param number: number of the task
     """
     with lock:
@@ -39,7 +39,7 @@ async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
         logger.info(instruction)
         flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
 
-        name = username + "-" + number + "-" + str(time()).replace(".", "-")
+        name = str(user_id)+ "-" + number + "-" + str(time()).replace(".", "-")
         with tempfile.NamedTemporaryFile(
             delete=True, suffix=".svf", dir=Path(settings.dynamic_dir)
         ) as temp_file:
@@ -58,6 +58,6 @@ async def fpga_process(username: str, number: str, task: FpgaTask) -> None:
             logger.info(f"Vido uploaded, download on {link}")
             logger.info(f"Tempfile {temp_file.name} deleted")
             await broker.publish(
-                message=ResultFpgaTask(username=username, number=number, link=link),
-                queue=result_exchange,
+                message=ResultFpgaTask(user_id=user_id, number=number, link=link),
+                queue=result_queue,
             )

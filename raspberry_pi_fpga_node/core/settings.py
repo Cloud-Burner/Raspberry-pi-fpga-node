@@ -11,8 +11,10 @@ class Settings(BaseSettings):
 
     rabbit_host: str = "localhost"
     rabbit_port: int = 5672
+    rabbit_user: str = "user"
+    rabbit_password: str = "password"
     green_board_q: str = "green_1"
-    result_exc: str = "result"
+    result_queue: str = "result"
 
     log_level: str = "debug"
     max_threads: int = 3

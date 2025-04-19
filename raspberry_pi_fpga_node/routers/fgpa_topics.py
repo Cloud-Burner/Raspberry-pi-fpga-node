@@ -21,5 +21,5 @@ async def handle(task: FpgaTask) -> None:
     """
     executor.submit(
         asyncio.run,
-        fpga_process(username=task.username, number=task.number, task=task),
+        fpga_process(user_id=task.user_id, number=task.number, task=task),
     )
