@@ -6,7 +6,6 @@ from typing import Literal
 from pydantic_settings import BaseSettings
 
 
-
 class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 

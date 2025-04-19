@@ -1,6 +1,6 @@
 """This module contains the outer validation schemas."""
 
-from pydantic import AnyUrl, BaseModel
+from pydantic import BaseModel
 
 from raspberry_pi_fpga_node.core.enums import LangExecutionType
 
