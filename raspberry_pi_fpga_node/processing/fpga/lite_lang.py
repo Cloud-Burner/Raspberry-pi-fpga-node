@@ -19,6 +19,7 @@ class LiteLangExecutor(CommandProcessingBase):
         }
 
     def _set_pin_state(self) -> None:
+        logger.info("Setting pin")
         _, pin_str, state = self._instruction[self.command_counter]
         pin = int(pin_str)
 

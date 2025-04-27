@@ -9,11 +9,14 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 
+    MODE: Literal["sync", "async"] = "async"
+
     rabbit_host: str = "192.168.1.39"
     rabbit_port: int = 5672
     rabbit_user: str = "user"
     rabbit_password: str = "password"
-    green_board_q: str = "green_1"
+    async_node_q: str = "green_1"
+    sync_node_q: str = "sync_de10_lite_1"
     result_queue: str = "result"
 
     log_level: str = "DEBUG"
@@ -23,7 +26,7 @@ class Settings(BaseSettings):
     video_format: str = "mp4"
     fps: int = 20
 
-    fpga_address: str = "ax9999"
+    fpga_address: str = "0x020f10dd"  # de10lite =
     fpga_camera_position: Literal[0, 1] = 0
 
     connected_pins: set[int] = {5, 6}

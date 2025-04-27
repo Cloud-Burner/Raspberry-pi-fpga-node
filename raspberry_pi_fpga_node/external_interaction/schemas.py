@@ -15,6 +15,14 @@ class FpgaTask(BaseModel):
     execution_type: LangExecutionType = LangExecutionType.LITE
 
 
+class FpgaSyncTask(BaseModel):
+    """FpgaTask represents a task from user."""
+
+    number: str
+    flash_file: str | None = None
+    instruction: str | None = None
+
+
 class ResultFpgaTask(BaseModel):
     """ResultFpgaTask represents a answer on user task"""
 
