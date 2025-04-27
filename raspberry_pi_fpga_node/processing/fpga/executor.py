@@ -24,7 +24,7 @@ from raspberry_pi_fpga_node.processing.fpga.video_write import VideoWriter
 result_queue = RabbitQueue(name=settings.result_queue)
 
 executor = ThreadPoolExecutor(max_workers=settings.max_threads)
-camera = VideoWriter()
+camera = VideoWriter() if settings.MODE == "acync" else None
 flasher = Flash()
 lock = threading.Lock()
 
@@ -85,5 +85,6 @@ async def sync_fpga_process(task: FpgaSyncTask) -> None:
         command_processor = LiteLangExecutor(
             instruction=task.instruction.encode("utf-8")
         )
-        command_processor.next()
+        for _ in range(31):
+            command_processor.next()
         return
