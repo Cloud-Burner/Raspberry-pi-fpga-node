@@ -28,6 +28,7 @@ class Settings(BaseSettings):
 
     fpga_address: str = "0x020f10dd"  # de10lite =
     fpga_camera_position: Literal[0, 1] = 0
+    arduino_camera_position: Literal[0, 1] = 1
     arduino_nano_port: str = "/dev/ttyUSB0"
     bootloader_old: bool = False
 

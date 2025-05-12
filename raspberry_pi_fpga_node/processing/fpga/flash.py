@@ -55,6 +55,7 @@ class Flash:
         # avrdude -v -patmega328p -carduino -P /dev/ttyUSB0 -b57600 -D -Uflash:w:sketch_may4a.ino.with_bootloader.hex:i
         """Function calls openocd flash tool to load user flash file
         :param flash_file_path:"""
+        rate = "-b57600" if settings.bootloader_old else "-b115200"
         command = [
             "avrdude",
             "-v",
@@ -62,7 +63,7 @@ class Flash:
             "-carduino",
             "-P",
             settings.arduino_nano_port,
-            "-b57600",
+            rate,
             "-D",
             f"-Uflash:w:{flash_file_path}:i",
         ]

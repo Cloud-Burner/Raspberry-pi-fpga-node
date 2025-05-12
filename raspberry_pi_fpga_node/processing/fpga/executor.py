@@ -68,6 +68,25 @@ async def fpga_process(task: FpgaTask) -> None:
         )
         logger.info(f"Result sent to user:{task.user_id}")
 
+async def async_arduino_nano_process(task: ArduinoTask) -> None:
+    """Make all task processes synchronously in parallel thread."""
+    if task.flash_file:
+        logger.info("Starting download flash file")
+        flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
+        with tempfile.NamedTemporaryFile(
+            delete=True, suffix=".hex", dir=Path(settings.dynamic_dir)
+        ) as temp_file:
+            temp_file.write(flash_file)
+            temp_file.flush()
+            flasher.flash_arduino_nano(flash_file_path=temp_file.name)
+            return
+    logger.info("Start instruction")
+
+
+# todo !!!!!
+
+
+
 
 async def sync_fpga_process(task: FpgaSyncTask) -> None:
     """Make all task processes synchronously in parallel thread."""
@@ -91,16 +110,3 @@ async def sync_fpga_process(task: FpgaSyncTask) -> None:
         return
 
 
-async def async_arduino_nano_process(task: ArduinoTask) -> None:
-    """Make all task processes synchronously in parallel thread."""
-    if task.flash_file:
-        logger.info("Starting download flash file")
-        flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
-        with tempfile.NamedTemporaryFile(
-            delete=True, suffix=".hex", dir=Path(settings.dynamic_dir)
-        ) as temp_file:
-            temp_file.write(flash_file)
-            temp_file.flush()
-            flasher.flash_arduino_nano(flash_file_path=temp_file.name)
-            return
-    logger.info("Start instruction")

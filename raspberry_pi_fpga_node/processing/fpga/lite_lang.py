@@ -26,7 +26,7 @@ class LiteLangExecutor(CommandProcessingBase):
         if not pin or not state:
             raise ValueError(f"Invalid script, pin is {pin}, state is {state}")
 
-        if pin not in settings.connected_pins:
+        if pin not in settings.connected_pins:  # todo arduino vs rpi pins
             logger.error(f"Not allowed to set pin {pin}")
             raise ValueError(f"Incorrect script, pin is {pin}")
         logical_state = 1 if state == "high" else 0

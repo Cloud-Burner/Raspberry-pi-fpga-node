@@ -13,7 +13,7 @@ from raspberry_pi_fpga_node.processing.fpga.executor import (
     sync_fpga_process,
 )
 
-async_node_q = RabbitQueue(settings.async_node_q, durable=True)
+async_node_q = RabbitQueue(settings.async_node_q, durable=True )
 sync_node_q = RabbitQueue(settings.sync_node_q, durable=True)
 async_router = RabbitRouter()
 sync_router = RabbitRouter()
@@ -27,10 +27,7 @@ async def async_handle(task: FpgaTask) -> None:
     :param task:
     :return:
     """
-    executor.submit(
-        asyncio.run,
-        fpga_process(task=task),
-    )
+    await fpga_process(task=task),
 
 
 @sync_router.subscriber(queue=sync_node_q)
