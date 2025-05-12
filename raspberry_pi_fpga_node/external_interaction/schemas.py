@@ -23,6 +23,12 @@ class FpgaSyncTask(BaseModel):
     instruction: str | None = None
 
 
+class ArduinoTask(BaseModel):
+    number: str
+    flash_file: str
+    instruction: str
+
+
 class ResultFpgaTask(BaseModel):
     """ResultFpgaTask represents a answer on user task"""
 

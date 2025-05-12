@@ -13,6 +13,7 @@ from raspberry_pi_fpga_node.core.broker import broker
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.s3 import download, upload_bytes
 from raspberry_pi_fpga_node.external_interaction.schemas import (
+    ArduinoTask,
     FpgaSyncTask,
     FpgaTask,
     ResultFpgaTask,
@@ -88,3 +89,18 @@ async def sync_fpga_process(task: FpgaSyncTask) -> None:
         for _ in range(31):
             command_processor.next()
         return
+
+
+async def async_arduino_nano_process(task: ArduinoTask) -> None:
+    """Make all task processes synchronously in parallel thread."""
+    if task.flash_file:
+        logger.info("Starting download flash file")
+        flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
+        with tempfile.NamedTemporaryFile(
+            delete=True, suffix=".hex", dir=Path(settings.dynamic_dir)
+        ) as temp_file:
+            temp_file.write(flash_file)
+            temp_file.flush()
+            flasher.flash_arduino_nano(flash_file_path=temp_file.name)
+            return
+    logger.info("Start instruction")

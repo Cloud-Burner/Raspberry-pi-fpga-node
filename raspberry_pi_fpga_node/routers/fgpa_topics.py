@@ -6,6 +6,7 @@ from faststream.rabbit import RabbitQueue, RabbitRouter
 
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.schemas import FpgaSyncTask, FpgaTask
+from raspberry_pi_fpga_node.middleware import error_async_fpga_handler
 from raspberry_pi_fpga_node.processing.fpga.executor import (
     executor,
     fpga_process,
@@ -19,6 +20,7 @@ sync_router = RabbitRouter()
 
 
 @async_router.subscriber(queue=async_node_q)
+@error_async_fpga_handler
 async def async_handle(task: FpgaTask) -> None:
     """
     Handle a message from green plate q
