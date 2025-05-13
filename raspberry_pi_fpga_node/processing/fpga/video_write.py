@@ -1,7 +1,7 @@
 """This module contains the processor that writes video and execute lang."""
 
 import tempfile
-
+from typing import Literal
 import cv2
 
 from raspberry_pi_fpga_node.core.settings import settings
@@ -16,11 +16,11 @@ class VideoWriter:
     def __init__(self) -> None:
         self.camera = cv2.VideoCapture(settings.camera_number)
         self.fourcc = cv2.VideoWriter_fourcc(*settings.fourcc_codec)
-        self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) // 2
-        self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) # todo
+        self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT)) // 2
 
     def get_video(
-        self, command_processor: CommandProcessingBase, position: int
+        self, command_processor: CommandProcessingBase, position: Literal[0, 1]
     ) -> bytes:
         with tempfile.NamedTemporaryFile(suffix=".mp4") as tmp:
             out = cv2.VideoWriter(
@@ -32,7 +32,7 @@ class VideoWriter:
                 if not ret:
                     break
                 frame_cut = (
-                    frame[:, : self.width] if not position else frame[:, self.width :]
+                    frame[: self.height, :] if not position else frame[self.height :, :]
                 )
                 out.write(frame_cut)
             out.release()

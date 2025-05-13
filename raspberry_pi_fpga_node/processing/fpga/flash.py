@@ -51,5 +51,26 @@ class Flash:
             logger.error(f"Error flashing boart {exc}")
             raise ConnectionRefusedError("No connection to fpga") from exc
 
-    def flash_arduino_nano(self) -> None:
-        pass
+    def flash_arduino_nano(self, flash_file_path: str) -> None:
+        # avrdude -v -patmega328p -carduino -P /dev/ttyUSB0 -b57600 -D -Uflash:w:sketch_may4a.ino.with_bootloader.hex:i
+        """Function calls openocd flash tool to load user flash file
+        :param flash_file_path:"""
+        rate = "-b57600" if settings.bootloader_old else "-b115200"
+        command = [
+            "avrdude",
+            "-v",
+            "-patmega328p",
+            "-carduino",
+            "-P",
+            settings.arduino_nano_port,
+            rate,
+            "-D",
+            f"-Uflash:w:{flash_file_path}:i",
+        ]
+        logger.debug(command)
+        try:
+            subprocess.run(command, check=True, capture_output=True, text=True)
+            logger.info(f"Arduino nano flashed for {flash_file_path.split('/')[-1]}")
+        except subprocess.CalledProcessError as exc:
+            logger.error(f"Error flashing board {exc}")
+            raise ConnectionRefusedError("No connection to arduino") from exc

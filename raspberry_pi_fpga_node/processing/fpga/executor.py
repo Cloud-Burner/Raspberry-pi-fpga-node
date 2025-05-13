@@ -13,6 +13,7 @@ from raspberry_pi_fpga_node.core.broker import broker
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.s3 import download, upload_bytes
 from raspberry_pi_fpga_node.external_interaction.schemas import (
+    ArduinoTask,
     FpgaSyncTask,
     FpgaTask,
     ResultFpgaTask,
@@ -23,15 +24,17 @@ from raspberry_pi_fpga_node.processing.fpga.video_write import VideoWriter
 
 result_queue = RabbitQueue(name=settings.result_queue)
 
-executor = ThreadPoolExecutor(max_workers=settings.max_threads)
-camera = VideoWriter() if settings.MODE == "acync" else None
+executor_fpga = ThreadPoolExecutor(max_workers=settings.max_threads)
+executor_avr = ThreadPoolExecutor(max_workers=settings.max_threads)
+camera = VideoWriter() if settings.MODE == "async" else None
 flasher = Flash()
-lock = threading.Lock()
+fpga_lock = threading.Lock()
+avr_lock = threading.Lock()
 
 
 async def fpga_process(task: FpgaTask) -> None:
     """Make all task processes asynchronously in parallel thread."""
-    with lock:
+    with fpga_lock:
         instruction = await download(
             bucket=settings.task_bucket, file=task.instruction_file
         )
@@ -66,6 +69,47 @@ async def fpga_process(task: FpgaTask) -> None:
             queue=result_queue,
         )
         logger.info(f"Result sent to user:{task.user_id}")
+
+
+async def async_arduino_nano_process(task: ArduinoTask) -> None:
+    """Make all task processes synchronously in parallel thread."""
+    instruction = await download(
+        bucket=settings.task_bucket, file=task.instruction_file
+    )
+    name = (
+        str(task.user_id) + "-" + task.number + "-" + str(time()).replace(".", "-")
+    )
+    video = camera.get_video(
+        command_processor=LiteLangExecutor(instruction=instruction),
+        position=settings.fpga_camera_position,
+
+    )
+    link = await upload_bytes(
+        bucket=settings.result_bucket,
+        file=video,
+        name=name + f".{settings.video_format}",
+    )
+    logger.info(f"Vido uploaded, download on {link}")
+    await broker.publish(
+        message=ResultFpgaTask(
+            user_id=task.user_id, number=task.number, link=str(link)
+        ),
+        queue=result_queue,
+    )
+    # if task.flash_file:
+    #     logger.info("Starting download flash file")
+    #     flash_file = await download(bucket=settings.task_bucket, file=task.flash_file)
+    #     with tempfile.NamedTemporaryFile(
+    #         delete=True, suffix=".hex", dir=Path(settings.dynamic_dir)
+    #     ) as temp_file:
+    #         temp_file.write(flash_file)
+    #         temp_file.flush()
+    #         flasher.flash_arduino_nano(flash_file_path=temp_file.name)
+    #         return
+    # logger.info("Start instruction")
+
+
+# todo !!!!!
 
 
 async def sync_fpga_process(task: FpgaSyncTask) -> None:

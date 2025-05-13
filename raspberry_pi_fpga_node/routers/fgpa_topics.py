@@ -2,14 +2,15 @@
 
 import asyncio
 
-from faststream.rabbit import RabbitQueue, RabbitRouter
-
+from faststream.rabbit import RabbitQueue, RabbitRouter, RabbitMessage
+from threading import Thread
 from raspberry_pi_fpga_node.core.settings import settings
-from raspberry_pi_fpga_node.external_interaction.schemas import FpgaSyncTask, FpgaTask
+from raspberry_pi_fpga_node.external_interaction.schemas import FpgaSyncTask, FpgaTask, ArduinoTask
+from raspberry_pi_fpga_node.middleware import error_async_fpga_handler
 from raspberry_pi_fpga_node.processing.fpga.executor import (
-    executor,
+    executor_fpga, executor_avr,
     fpga_process,
-    sync_fpga_process,
+    sync_fpga_process,async_arduino_nano_process
 )
 
 async_node_q = RabbitQueue(settings.async_node_q, durable=True)
@@ -18,19 +19,45 @@ async_router = RabbitRouter()
 sync_router = RabbitRouter()
 
 
-@async_router.subscriber(queue=async_node_q)
-async def async_handle(task: FpgaTask) -> None:
+@async_router.subscriber(queue=async_node_q, no_ack=True)
+@error_async_fpga_handler
+async def async_handle(task: FpgaTask, msg: RabbitMessage) -> None:
     """
     Handle a message from green plate q
     :param task:
     :return:
     """
-    executor.submit(
-        asyncio.run,
-        fpga_process(task=task),
-    )
+    # loop = asyncio.get_running_loop()
+    # result = await loop.run_in_executor(executor_fpga, fpga_process, task)
+    # future = executor_fpga.submit(loop, fpga_process(task=task),)
+    # future.result()
 
 
+
+    def thread_target():
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(fpga_process(task=task))
+        finally:
+            loop.close()
+
+    thread = Thread(target=thread_target)
+    thread.start()
+    thread.join()
+
+    # asyncio.to_thread(fpga_process(task=task), )
+    await msg.ack()
+
+@sync_router.subscriber(queue=sync_node_q)
+async def syc_handle(task: ArduinoTask,  msg: RabbitMessage) -> None:
+    """
+    Handle a message from green plate q
+    :param task:
+    :return:
+    """
+    await async_arduino_nano_process(task=task, )
+    await msg.ack()
 @sync_router.subscriber(queue=sync_node_q)
 async def sync_handle(task: FpgaSyncTask) -> None:
     """
@@ -38,7 +65,8 @@ async def sync_handle(task: FpgaSyncTask) -> None:
     :param task:
     :return:
     """
-    executor.submit(
+    future = executor_fpga.submit(
         asyncio.run,
         sync_fpga_process(task=task),
     )
+    future.result()

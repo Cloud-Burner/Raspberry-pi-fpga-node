@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     """Settings class for the Raspberry Pi Fpga node"""
 
     MODE: Literal["sync", "async"] = "async"
-
+    origin: str = "https://cloudburner-miem"
     rabbit_host: str = "192.168.1.39"
     rabbit_port: int = 5672
     rabbit_user: str = "user"
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     result_queue: str = "result"
 
     log_level: str = "DEBUG"
-    max_threads: int = 3
+    max_threads: int = 1
     camera_number: int = 0
     fourcc_codec: str = "mp4v"
     video_format: str = "mp4"
@@ -28,6 +28,9 @@ class Settings(BaseSettings):
 
     fpga_address: str = "0x020f10dd"  # de10lite =
     fpga_camera_position: Literal[0, 1] = 0
+    arduino_camera_position: Literal[0, 1] = 1
+    arduino_nano_port: str = "/dev/ttyUSB0"
+    bootloader_old: bool = False
 
     connected_pins: set[int] = {5, 6}
 
