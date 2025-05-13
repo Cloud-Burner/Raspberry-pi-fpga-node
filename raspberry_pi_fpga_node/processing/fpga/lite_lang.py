@@ -12,6 +12,7 @@ from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
 
 class LiteLangExecutor(CommandProcessingBase):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
+        logger.info("starting LiteLangExecutor")
         super().__init__(*args, **kwargs)
         logger.info("super initied")
         self.map_commands = {
