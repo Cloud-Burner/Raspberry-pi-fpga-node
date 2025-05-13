@@ -28,7 +28,7 @@ async def async_handle(task: FpgaTask, msg: RabbitMessage) -> None:
     :return:
     """
     (await fpga_process(task=task),)
-    await RabbitMessage.ack()
+    await msg.ack()
 
 
 @sync_router.subscriber(queue=sync_node_q)
