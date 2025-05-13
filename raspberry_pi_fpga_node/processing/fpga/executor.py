@@ -25,7 +25,7 @@ from raspberry_pi_fpga_node.processing.fpga.video_write import VideoWriter
 result_queue = RabbitQueue(name=settings.result_queue)
 
 executor = ThreadPoolExecutor(max_workers=settings.max_threads)
-camera = VideoWriter() if settings.MODE == "acync" else None
+camera = VideoWriter() if settings.MODE == "async" else None
 flasher = Flash()
 lock = threading.Lock()
 
@@ -68,6 +68,7 @@ async def fpga_process(task: FpgaTask) -> None:
         )
         logger.info(f"Result sent to user:{task.user_id}")
 
+
 async def async_arduino_nano_process(task: ArduinoTask) -> None:
     """Make all task processes synchronously in parallel thread."""
     if task.flash_file:
@@ -84,8 +85,6 @@ async def async_arduino_nano_process(task: ArduinoTask) -> None:
 
 
 # todo !!!!!
-
-
 
 
 async def sync_fpga_process(task: FpgaSyncTask) -> None:
@@ -108,5 +107,3 @@ async def sync_fpga_process(task: FpgaSyncTask) -> None:
         for _ in range(31):
             command_processor.next()
         return
-
-

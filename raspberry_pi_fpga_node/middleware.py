@@ -19,7 +19,7 @@ def error_async_fpga_handler(func):
             await broker.publish(
                 ResultFpgaTask(
                     user_id=msg.user_id,
-                    task_id=msg.task_id,
+                    task_id=msg.number,
                     link=f"{settings.origin}/error",
                 ),
                 queue=result_queue,
