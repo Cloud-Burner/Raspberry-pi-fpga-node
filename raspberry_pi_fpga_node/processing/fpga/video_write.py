@@ -20,7 +20,7 @@ class VideoWriter:
         self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     def get_video(
-        self, command_processor: CommandProcessingBase, position: int
+        self, command_processor: CommandProcessingBase, position: 0
     ) -> bytes:
         with tempfile.NamedTemporaryFile(suffix=".mp4") as tmp:
             out = cv2.VideoWriter(
