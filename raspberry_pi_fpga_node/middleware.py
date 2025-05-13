@@ -12,7 +12,7 @@ from raspberry_pi_fpga_node.processing.fpga.executor import result_queue
 def error_async_fpga_handler(func):
     async def wrapper(task: FpgaTask, msg: RabbitMessage):
         try:
-            await func(msg)
+            await func(task=task, msg=msg)
         except Exception as exc:
             logger.error(f"Error in task {func.__name__}: {exc}")
 
