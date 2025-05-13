@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     fpga_pins: set[int] = {5, 6}
     arduino_pins: set[int] = {7, 8}
     bootloader_old: bool = True
+    arduino_nano_port: str = "/dev/ttyUSB0"
 
     s3_url: str = "http://192.168.1.39:9000"
     access_key: str = "f0Sxs0Bf2pqJDQtFNQZF"
