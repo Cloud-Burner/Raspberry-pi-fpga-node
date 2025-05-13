@@ -17,6 +17,7 @@ class LiteLangExecutor(CommandProcessingBase):
             "pin": self._set_pin_state,
             "write_frame": self._add_frame_amount,
         }
+        self.allowed_pins = kwargs.get("pins", settings.connected_pins)
 
     def _set_pin_state(self) -> None:
         logger.info("Setting pin")
@@ -26,7 +27,7 @@ class LiteLangExecutor(CommandProcessingBase):
         if not pin or not state:
             raise ValueError(f"Invalid script, pin is {pin}, state is {state}")
 
-        if pin not in settings.connected_pins:
+        if pin not in self.allowed_pins:
             logger.error(f"Not allowed to set pin {pin}")
             raise ValueError(f"Incorrect script, pin is {pin}")
         logical_state = 1 if state == "high" else 0
