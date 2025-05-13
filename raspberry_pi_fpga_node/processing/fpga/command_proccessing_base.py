@@ -5,7 +5,7 @@ import lgpio
 from raspberry_pi_fpga_node.core.settings import settings
 
 chip = lgpio.gpiochip_open(0)
-for pin in settings.connected_pins:
+for pin in settings.arduino_pins + settings.fpga_pins:
     lgpio.gpio_claim_output(chip, pin, 1)
 
 
