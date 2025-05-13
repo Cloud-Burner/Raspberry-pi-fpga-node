@@ -1,5 +1,5 @@
 from loguru import logger
-
+from faststream.rabbit import RabbitQueue, RabbitRouter, RabbitMessage
 from raspberry_pi_fpga_node.core.broker import broker
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.schemas import (
@@ -10,7 +10,7 @@ from raspberry_pi_fpga_node.processing.fpga.executor import result_queue
 
 
 def error_async_fpga_handler(func):
-    async def wrapper(msg: FpgaTask):
+    async def wrapper(task: FpgaTask, msg: RabbitMessage):
         try:
             await func(msg)
         except Exception as exc:
