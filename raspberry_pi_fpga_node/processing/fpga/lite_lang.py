@@ -20,7 +20,7 @@ class LiteLangExecutor(CommandProcessingBase):
             "write_frame": self._add_frame_amount,
         }
         logger.info("map ready")
-        self.allowed_pins = settings.connected_pins
+        self.allowed_pins = kwargs.get("pins", settings.connected_pins)
         logger.info("allowed pins: " + str(self.allowed_pins))
 
     def _set_pin_state(self) -> None:
