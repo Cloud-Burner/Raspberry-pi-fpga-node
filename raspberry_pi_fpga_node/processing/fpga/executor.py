@@ -88,7 +88,7 @@ async def arduino_nano_process(task: ArduinoTask) -> None:
         )
 
         with tempfile.NamedTemporaryFile(
-            delete=True, suffix=".svf", dir=Path(settings.dynamic_dir)
+            delete=True, suffix=".hex", dir=Path(settings.dynamic_dir)
         ) as temp_file:
             temp_file.write(flash_file)
             temp_file.flush()
