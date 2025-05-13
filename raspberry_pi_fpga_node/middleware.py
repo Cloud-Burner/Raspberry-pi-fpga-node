@@ -17,9 +17,9 @@ def error_async_fpga_handler(func):
             logger.error(f"Error in task {func.__name__}: {exc}")
 
             await broker.publish(
-                ResultFpgaTask(
+            ResultFpgaTask(
                     user_id=task.user_id,
-                    task_id=task.number,
+                    number=task.number,
                     link=f"{settings.origin}/error",
                 ),
                 queue=result_queue,
