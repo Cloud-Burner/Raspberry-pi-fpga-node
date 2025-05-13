@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     result_queue: str = "result"
 
     log_level: str = "DEBUG"
-    max_threads: int = 3
+    max_threads: int = 1
     camera_number: int = 0
     fourcc_codec: str = "mp4v"
     video_format: str = "mp4"
