@@ -8,7 +8,7 @@ from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
     CommandProcessingBase,
 )
-
+from loguru import logger
 
 class VideoWriter:
     """This class writes video and switch tick in executor"""
@@ -20,8 +20,9 @@ class VideoWriter:
         self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     def get_video(
-        self, command_processor: CommandProcessingBase, position: 0
+        self, command_processor: CommandProcessingBase, position = 0
     ) -> bytes:
+        logger.info("Video start")
         with tempfile.NamedTemporaryFile(suffix=".mp4") as tmp:
             out = cv2.VideoWriter(
                 tmp.name, self.fourcc, settings.fps, (self.width, self.height)
