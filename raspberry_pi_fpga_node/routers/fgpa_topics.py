@@ -3,7 +3,7 @@
 import asyncio
 
 from faststream.rabbit import RabbitQueue, RabbitRouter, RabbitMessage
-
+from threading import Thread
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.schemas import FpgaSyncTask, FpgaTask, ArduinoTask
 from raspberry_pi_fpga_node.middleware import error_async_fpga_handler
@@ -27,10 +27,26 @@ async def async_handle(task: FpgaTask, msg: RabbitMessage) -> None:
     :param task:
     :return:
     """
-    loop = asyncio.get_running_loop()
+    # loop = asyncio.get_running_loop()
     # result = await loop.run_in_executor(executor_fpga, fpga_process, task)
-    future = executor_fpga.submit(loop, fpga_process(task=task),)
+    # future = executor_fpga.submit(loop, fpga_process(task=task),)
     # future.result()
+
+
+
+    def thread_target():
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(fpga_process(task=task))
+        finally:
+            loop.close()
+
+    thread = Thread(target=thread_target)
+    thread.start()
+    thread.join()
+
+    # asyncio.to_thread(fpga_process(task=task), )
     await msg.ack()
 
 @sync_router.subscriber(queue=sync_node_q)
