@@ -92,6 +92,7 @@ async def arduino_nano_process(task: ArduinoTask) -> None:
         ) as temp_file:
             temp_file.write(flash_file)
             temp_file.flush()
+            logger.info("Start flash")
             flasher.flash_arduino_nano(flash_file_path=temp_file.name)
             video = camera.get_video(
                 command_processor=LiteLangExecutor(
