@@ -54,7 +54,8 @@ async def fpga_process(task: FpgaTask) -> None:
             flasher.flash_fpga(flash_file_path=temp_file.name)
             video = camera.get_video(
                 command_processor=LiteLangExecutor(
-                    instruction=instruction, pins=settings.fpga_pins
+                    instruction=instruction,
+                    # pins=settings.fpga_pins
                 ),
                 position=settings.fpga_camera_position,
             )
@@ -96,7 +97,8 @@ async def arduino_nano_process(task: ArduinoTask) -> None:
             flasher.flash_arduino_nano(flash_file_path=temp_file.name)
             video = camera.get_video(
                 command_processor=LiteLangExecutor(
-                    instruction=instruction, pins=settings.arduino_pins
+                    instruction=instruction,
+                    # pins=settings.arduino_pins
                 ),
                 position=settings.arduino_camera_position,
             )

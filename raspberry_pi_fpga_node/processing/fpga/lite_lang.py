@@ -12,12 +12,12 @@ from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
 
 class LiteLangExecutor(CommandProcessingBase):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
-        super().__init__(kwargs.get("instruction"))
+        super().__init__(*args, **kwargs)
         self.map_commands = {
             "pin": self._set_pin_state,
             "write_frame": self._add_frame_amount,
         }
-        self.allowed_pins = kwargs.get("pins", settings.connected_pins)
+        self.allowed_pins = settings.connected_pins
 
     def _set_pin_state(self) -> None:
         logger.info("Setting pin")
