@@ -16,8 +16,8 @@ class VideoWriter:
     def __init__(self) -> None:
         self.camera = cv2.VideoCapture(settings.camera_number)
         self.fourcc = cv2.VideoWriter_fourcc(*settings.fourcc_codec)
-        self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) // 2  # todo
-        self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.width = int(self.camera.get(cv2.CAP_PROP_FRAME_WIDTH)) # todo
+        self.height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT)) // 2
 
     def get_video(
         self, command_processor: CommandProcessingBase, position: Literal[0, 1]
