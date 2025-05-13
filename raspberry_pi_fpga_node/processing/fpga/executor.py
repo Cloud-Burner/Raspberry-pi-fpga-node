@@ -27,7 +27,7 @@ result_queue = RabbitQueue(name=settings.result_queue)
 
 fpga_executor = ThreadPoolExecutor(max_workers=settings.max_threads)
 avr_executor = ThreadPoolExecutor(max_workers=settings.max_threads)
-camera = VideoWriter() if settings.MODE == "acync" else None
+camera = VideoWriter() if settings.MODE == "async" else None
 flasher = Flash()
 fpga_lock = threading.Lock()
 avr_lock = threading.Lock()
@@ -95,12 +95,11 @@ async def arduino_nano_process(task: ArduinoTask) -> None:
             temp_file.flush()
             logger.info("Start flash")
             flasher.flash_arduino_nano(flash_file_path=temp_file.name)
+            logger.info("call get video")
+            ex = LiteLangExecutor(instruction=instruction)
+            logger.info("execurot ready")
             video = camera.get_video(
-                command_processor=LiteLangExecutor(
-                    instruction=instruction,
-                    # pins=settings.arduino_pins
-                ),
-                position=settings.arduino_camera_position,
+                command_processor=ex
             )
             link = await upload_bytes(
                 bucket=settings.result_bucket,
