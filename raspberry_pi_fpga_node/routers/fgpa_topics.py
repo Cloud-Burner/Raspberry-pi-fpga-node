@@ -28,8 +28,8 @@ async def async_handle(task: FpgaTask, msg: RabbitMessage) -> None:
     :return:
     """
     loop = asyncio.get_running_loop()
-    result = await loop.run_in_executor(executor_fpga, fpga_process, task)
-    # future = executor_fpga.submit(asyncio.run, fpga_process(task=task),)
+    # result = await loop.run_in_executor(executor_fpga, fpga_process, task)
+    future = executor_fpga.submit(loop, fpga_process(task=task),)
     # future.result()
     await msg.ack()
 
