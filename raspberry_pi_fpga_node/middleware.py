@@ -24,5 +24,6 @@ def error_async_fpga_handler(func):
                 ),
                 queue=result_queue,
             )
+            await msg.ack()
 
     return wrapper

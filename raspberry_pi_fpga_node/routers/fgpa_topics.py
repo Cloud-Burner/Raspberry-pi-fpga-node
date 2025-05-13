@@ -27,7 +27,7 @@ async def async_handle(task: FpgaTask, msg: RabbitMessage) -> None:
     :param task:
     :return:
     """
-    (await fpga_process(task=task),)
+    await fpga_process(task=task)
     await msg.ack()
 
 
