@@ -24,10 +24,9 @@ class LiteLangExecutor(CommandProcessingBase):
         logger.info("allowed pins: " + str(self.allowed_pins))
 
     def _set_pin_state(self) -> None:
-        logger.info("Setting pin")
         _, pin_str, state = self._instruction[self.command_counter]
         pin = int(pin_str)
-
+        logger.info("Setting pin")
         if not pin or not state:
             raise ValueError(f"Invalid script, pin is {pin}, state is {state}")
 

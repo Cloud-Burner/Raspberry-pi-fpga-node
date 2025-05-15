@@ -115,3 +115,13 @@ openocd -f /usr/share/openocd/scripts/interface/altera-usb-blaster.cfg    -f /us
 
 settings = Settings()
 
+
+    connected_pins: set[int] = {5, 6,26, 25, 19, 1, 8, 24, 23, 18, 15}
+    fpga_pins: set[int] = {25, 1, 8, 24, 23, 18, 15}
+    arduino_pins: set[int] = {26, 19}
+    bootloader_old: bool = True
+    arduino_nano_port: str = "/dev/ttyUSB0"
+arduino_nano_2
+
+![img.png](img.png)
+![img_1.png](img_1.png)

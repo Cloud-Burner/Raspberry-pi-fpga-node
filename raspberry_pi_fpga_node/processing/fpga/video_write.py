@@ -1,6 +1,7 @@
 """This module contains the processor that writes video and execute lang."""
 
 import tempfile
+import time
 
 import cv2
 
@@ -9,6 +10,10 @@ from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
     CommandProcessingBase,
 )
 from loguru import logger
+
+
+MAX_ERROR_COUNT = 200
+
 
 class VideoWriter:
     """This class writes video and switch tick in executor"""
@@ -27,11 +32,16 @@ class VideoWriter:
             out = cv2.VideoWriter(
                 tmp.name, self.fourcc, settings.fps, (self.width, self.height)
             )
-            while command_processor.execution_state:
+            errors_count = 0
+            while command_processor.execution_state and errors_count < MAX_ERROR_COUNT:
+                time.sleep(0.05)
                 ret, frame = self.camera.read()
-                command_processor.next()
                 if not ret:
-                    break
+                    errors_count += 1
+                    logger.warning(f"Didn't receive frame: {errors_count}")
+                    continue
+
+                command_processor.next()
                 frame_cut = (
                     frame[: self.height, :] if not position else frame[self.height :, :]
                 )
