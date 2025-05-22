@@ -4,13 +4,12 @@ import tempfile
 import time
 
 import cv2
+from loguru import logger
 
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
     CommandProcessingBase,
 )
-from loguru import logger
-
 
 MAX_ERROR_COUNT = 200
 

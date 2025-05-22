@@ -5,9 +5,7 @@ import asyncio
 from faststream.rabbit import RabbitQueue, RabbitRouter
 
 from raspberry_pi_fpga_node.core.settings import settings
-from raspberry_pi_fpga_node.external_interaction.schemas import (
-    ArduinoTask,
-)
+from raspberry_pi_fpga_node.external_interaction.schemas import ArduinoTask
 from raspberry_pi_fpga_node.processing.fpga.executor import (
     arduino_nano_process,
     avr_executor,

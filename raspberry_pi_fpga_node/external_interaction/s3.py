@@ -1,12 +1,22 @@
 """This module contains the s3 functionality."""
 
 from typing import Any
+from urllib.parse import urlparse, urlunparse
 
 import aiofiles
 from aiobotocore.session import get_session
 from pydantic import AnyUrl
 
 from raspberry_pi_fpga_node.core.settings import settings
+
+
+def rewrite_url(url: str) -> str:
+    parsed = urlparse(url)
+
+    new_path = f"/s3{parsed.path}"
+
+    return urlunparse(("", "", new_path, "", parsed.query, ""))
+
 
 session = get_session()
 
@@ -19,15 +29,15 @@ creds = {
 }
 
 
-async def upload_bytes(bucket: str, file: bytes, name: str) -> AnyUrl:
+async def upload_bytes(bucket: str, file: bytes, name: str) -> str:
     """Загружает файл из байтов (оперативы)"""
     async with session.create_client(**creds) as s3_client:
         await s3_client.put_object(Bucket=bucket, Key=name, Body=file)
-        return AnyUrl(
+        return rewrite_url(
             await s3_client.generate_presigned_url(
                 "get_object",
                 Params={"Bucket": bucket, "Key": name},
-                ExpiresIn=36000,
+                ExpiresIn=360000,
             )
         )
 
@@ -44,7 +54,7 @@ async def upload_from_disk(bucket: str, file_path: str) -> AnyUrl:
                 await s3_client.generate_presigned_url(
                     "get_object",
                     Params={"Bucket": bucket, "Key": file_path.split("/")[-1]},
-                    ExpiresIn=36000,
+                    ExpiresIn=360000,
                 )
             )
 
