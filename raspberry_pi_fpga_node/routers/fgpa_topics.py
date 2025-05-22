@@ -7,7 +7,7 @@ from faststream.rabbit import RabbitQueue, RabbitRouter
 from raspberry_pi_fpga_node.core.settings import settings
 from raspberry_pi_fpga_node.external_interaction.schemas import FpgaSyncTask, FpgaTask
 from raspberry_pi_fpga_node.processing.fpga.executor import (
-    executor,
+    fpga_executor,
     fpga_process,
     sync_fpga_process,
 )
@@ -25,7 +25,7 @@ async def async_handle(task: FpgaTask) -> None:
     :param task:
     :return:
     """
-    executor.submit(
+    fpga_executor.submit(
         asyncio.run,
         fpga_process(task=task),
     )
@@ -38,7 +38,7 @@ async def sync_handle(task: FpgaSyncTask) -> None:
     :param task:
     :return:
     """
-    executor.submit(
+    fpga_executor.submit(
         asyncio.run,
         sync_fpga_process(task=task),
     )

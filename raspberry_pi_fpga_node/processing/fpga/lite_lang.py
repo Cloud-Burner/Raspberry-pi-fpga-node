@@ -12,21 +12,25 @@ from raspberry_pi_fpga_node.processing.fpga.command_proccessing_base import (
 
 class LiteLangExecutor(CommandProcessingBase):
     def __init__(self, *args, **kwargs) -> None:  # type: ignore[no-untyped-def]
-        super().__init__(*args, **kwargs)
+        logger.info("starting LiteLangExecutor")
+        super().__init__(kwargs.get("instruction"))
+        logger.info("super initied")
         self.map_commands = {
             "pin": self._set_pin_state,
             "write_frame": self._add_frame_amount,
         }
+        logger.info("map ready")
+        self.allowed_pins = kwargs.get("pins", settings.connected_pins)
+        logger.info("allowed pins: " + str(self.allowed_pins))
 
     def _set_pin_state(self) -> None:
-        logger.info("Setting pin")
         _, pin_str, state = self._instruction[self.command_counter]
         pin = int(pin_str)
-
+        logger.info("Setting pin")
         if not pin or not state:
             raise ValueError(f"Invalid script, pin is {pin}, state is {state}")
 
-        if pin not in settings.connected_pins:
+        if pin not in self.allowed_pins:
             logger.error(f"Not allowed to set pin {pin}")
             raise ValueError(f"Incorrect script, pin is {pin}")
         logical_state = 1 if state == "high" else 0

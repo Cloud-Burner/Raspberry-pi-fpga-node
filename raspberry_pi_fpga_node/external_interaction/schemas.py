@@ -15,6 +15,10 @@ class FpgaTask(BaseModel):
     execution_type: LangExecutionType = LangExecutionType.LITE
 
 
+class ArduinoTask(FpgaTask):
+    pass
+
+
 class FpgaSyncTask(BaseModel):
     """FpgaTask represents a task from user."""
 
@@ -29,3 +33,7 @@ class ResultFpgaTask(BaseModel):
     number: str
     user_id: int
     link: str
+
+
+class ResultArduinoTask(ResultFpgaTask):
+    pass
